@@ -1,38 +1,49 @@
 @extends('layouts.app')
 @section('content')
     <div class="container">
-        <div class="row">
-            <div class="col-2">
-                <select name="" id="billboard-category" class="form-control" onchange="getChart(event)">
-                    @foreach($data['category'] as $option)
-                        <option value="{{$option}}" @if($option == app('request')->cate) selected @endif>{{ $option }}</option>
-                    @endforeach
-                </select>
-                <script>
-                    function getChart(e){
-                        window.location = "?cate="+e.target.value;
-                    }
-                </script>
-            </div>
-            <div class="col-3"></div>
-            <div class="item-status col-5">
-                <div class="row text-center small">
-                    <div class="col-3">RE ENTRY</div>
-                    <div class="col-3">PEAK</div>
-                    <div class="col-3">LAST WEEK</div>
-                    <div class="col-3">WRK ON CHART</div>
+        <div class="">
+            <form action="{{ route('chart.store') }}" class="text-center row" method="POST">
+                @csrf
+                @method("POST")
+                <div class="col-2">
+                    <select name="chart_category_id" id="billboard-category" class="form-control" onchange="getChart(event)">
+                        @foreach($data['category'] as $item)
+                            <option value="{{$item->id}}" @if($item->key == app('request')->cate) selected @endif>{{ $item->key }}</option>
+                        @endforeach
+                    </select>
+                    <script>
+                        function getChart(e){
+                            window.location = "?cate="+e.target.value;
+                        }
+                    </script>
+                </div>
+                @if ($errors->any())
+                    <div class="alert alert-danger">
+                        <ul>
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
+                <div class="col-3"></div>
+                <div class="item-status col-5">
+                    <div class="row text-center small">
+                        <div class="col-3">RE ENTRY</div>
+                        <div class="col-3">PEAK</div>
+                        <div class="col-3">LAST WEEK</div>
+                        <div class="col-3">WRK ON CHART</div>
+                    </div>
+                </div>
+                <div class="col-2">
+                    <input type="hidden" name="title" value="{{ $data['chart']['chart_name'] }}">
+                    <input type="hidden" name="chart_date" value="{{ $data['chart']['chart_date'] }}">
+                    <input type="hidden" name="chart" value="{{ json_encode($data['chart']['chart']) }}">
+                    <input type="hidden" name="video" value="{{ json_encode($data['chart']['chart_videos']) }}">
+                    <input type="submit" value="STORE CHART" class="btn btn-primary">
                 </div>
             </div>
-            <div class="col-2">
-                <form action="" class="text-center">
-                    <input type="text" name="chart_name" value="{{ $data['chart']['chart_name'] }}">
-                    <input type="text" name="chart_date" value="{{ $data['chart']['chart_date'] }}">
-                    <input type="hidden" name="chart" value="{{ json_encode($data['chart']['chart']) }}">
-                    <input type="hidden" name="chart_video" value="{{ json_encode($data['chart']['chart_videos']) }}">
-                    <a href="" class="btn btn-primary">store chart</a>
-                </form>
-            </div>
-        </div>
+        </form>
         <div class="chart">
             @foreach($data['chart']['chart'] as $item)
             <div class="row chart-item bg-white px-3 py-5 my-3">

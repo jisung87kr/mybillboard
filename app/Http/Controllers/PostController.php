@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Post;
+use App\Models\ChartCategory;
 use Illuminate\Http\Request;
 
 class PostController extends Controller
@@ -20,13 +21,7 @@ class PostController extends Controller
     {
         $this->chartUrl = "https://www.billboard.com/charts";
         $this->imageUrl = "https://charts-static.billboard.com";
-        $this->category = [
-            'hot-100',
-            'billboard-200',
-            'billboard-global-200',
-            'billboard-global-excl-us',
-            'artist-100',
-        ];
+        $this->category = ChartCategory::all();
     }
 
     public function index(Request $request)
@@ -141,7 +136,7 @@ class PostController extends Controller
         if ($param) {
             $url .= '/' . $param;
         } else {
-            $url .= '/' . $this->category[0];
+            $url .= '/' . $this->category[0]->key;
         }
         $response = $this->curl($url);
         $dom      = new \DOMDocument;
