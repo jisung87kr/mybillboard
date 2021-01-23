@@ -16,13 +16,14 @@ class PostController extends Controller
 
     public function index(Request $request)
     {
+        $billboardChartController = new BillboardChartController;
         $cate = isset($request->cate) ? $request->cate : null;
         $data = [
             'category' => BillboardChartCategory::all(),
-            'chart'     => $this->getBillboardchart($cate),
+            'chart'     => $billboardChartController->getLiveBillboardchart($cate),
             'links'    => [
-                'chart' => $this->chartUrl,
-                'image' => $this->imageUrl,
+                'chart' => $billboardChartController->chartUrl,
+                'image' => $billboardChartController->imageUrl,
             ],
         ];
 

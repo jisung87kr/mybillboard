@@ -6,9 +6,9 @@
                 @csrf
                 @method("POST")
                 <div class="col-2">
-                    <select name="chart_category_id" id="billboard-category" class="form-control" onchange="getChart(event)">
+                    <select name="chart_category_key" id="billboard-category" class="form-control" onchange="getChart(event)">
                         @foreach($data['category'] as $item)
-                            <option value="{{$item->id}}" @if($item->key == app('request')->cate) selected @endif>{{ $item->key }}</option>
+                            <option value="{{$item->key}}" data-id="{{ $item->id }}" @if($item->key == app('request')->cate) selected @endif>{{ $item->key }}</option>
                         @endforeach
                     </select>
                     <script>
@@ -35,6 +35,7 @@
                         <div class="col-3">WRK ON CHART</div>
                     </div>
                 </div>
+                @if(isset($data['chart']['is_live']))
                 <div class="col-2">
                     <input type="hidden" name="title" value="{{ $data['chart']['chart_name'] }}">
                     <input type="hidden" name="chart_date" value="{{ $data['chart']['chart_date'] }}">
@@ -42,6 +43,7 @@
                     <input type="hidden" name="video" value="{{ json_encode($data['chart']['chart_videos']) }}">
                     <input type="submit" value="STORE CHART" class="btn btn-primary">
                 </div>
+                @endif
             </div>
         </form>
         <div class="chart">

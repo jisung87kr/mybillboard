@@ -47,14 +47,16 @@ class BillboardChartController extends Controller
      */
     public function store(Request $request)
     {
-        $chartCategory = BillboardChartCategory::find($request->input('chart_category_id'));
         $validated     = $request->validate([
-            'chart_category_id' => 'required',
+            'chart_category_key' => 'required',
             'chart_date'        => 'required',
             'title'             => 'required',
             'chart'             => 'required',
             'video'             => 'required',
         ]);
+        $chartCategory = BillboardChartCategory::where('key', $request->input('chart_category_key'))->first();
+        $validated['billboard_chart_category_id'] = $chartCategory['id'];
+        unset($validated['chart_category_key']);
         $chartCategory->charts()->create($validated);
         return redirect()->route('index');
     }
@@ -131,7 +133,7 @@ class BillboardChartController extends Controller
         return $response;
     }
 
-    public function getBillboardchart($param = null)
+    public function getLiveBillboardchart($param = null)
     {
         $url = $this->chartUrl;
         if ($param) {
@@ -143,11 +145,12 @@ class BillboardChartController extends Controller
         $dom      = new \DOMDocument;
         @$dom->loadHTML($response);
         $charts = $dom->getElementById('charts');
-        $data = [
+        $data   = [
             'chart_name'   => $charts->getAttribute('data-chart-name'),
             'chart_date'   => $charts->getAttribute('data-chart-date'),
             'chart'        => json_decode($charts->getAttribute('data-charts')),
             'chart_videos' => json_decode($charts->getAttribute('data-chart-videos')),
+            'is_live'      => true,
         ];
         return $data;
     }
