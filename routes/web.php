@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\BillboardChartController;
+use App\Http\Controllers\youtubeDataApiController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -16,5 +17,8 @@ use App\Http\Controllers\BillboardChartController;
 Route::resource('/', PostController::class);
 Route::post('/chart', [BillboardChartController::class, 'store'])->name('chart.store');
 Auth::routes();
+
+Route::get('/youtube', [youtubeDataApiController::class, 'index'])->name('youtube.index');
+Route::get('/youtube/search', [youtubeDataApiController::class, 'search'])->name('youtube.search');
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
