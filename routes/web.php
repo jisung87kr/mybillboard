@@ -14,11 +14,22 @@ use App\Http\Controllers\youtubeDataApiController;
 | contains the "web" middleware group. Now create something great!
 |
 */
-Route::resource('/', PostController::class);
+Route::get('/', function(){
+    return view('welcome');
+});
+
+Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
+    return view('dashboard');
+})->name('dashboard');
+
+
+Route::resource('/post', PostController::class);
 Route::post('/chart', [BillboardChartController::class, 'store'])->name('chart.store');
-Auth::routes();
+//Auth::routes();
 
 Route::get('/youtube', [youtubeDataApiController::class, 'index'])->name('youtube.index');
 Route::get('/youtube/search', [youtubeDataApiController::class, 'search'])->name('youtube.search');
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
+

@@ -1,84 +1,83 @@
-@extends('layouts.app')
-@section('content')
-    <div class="container">
-        <div class="">
-            <form action="{{ route('chart.store') }}" class="text-center row" method="POST">
-                @csrf
-                @method("POST")
-                <div class="col-2">
-                    <select name="chart_category_key" id="billboard-category" class="form-control" onchange="getChart(event)">
-                        @foreach($data['category'] as $item)
-                            <option value="{{$item->key}}" data-id="{{ $item->id }}" @if($item->key == app('request')->cate) selected @endif>{{ $item->key }}</option>
-                        @endforeach
-                    </select>
-                    <script>
-                        function getChart(e){
-                            window.location = "?cate="+e.target.value;
-                        }
-                    </script>
-                </div>
-                @if ($errors->any())
-                    <div class="alert alert-danger">
-                        <ul>
-                            @foreach ($errors->all() as $error)
-                                <li>{{ $error }}</li>
-                            @endforeach
-                        </ul>
-                    </div>
-                @endif
-                <div class="col-3"></div>
-                <div class="item-status col-5">
-                    <div class="row text-center small">
-                        <div class="col-3">RE ENTRY</div>
-                        <div class="col-3">PEAK</div>
-                        <div class="col-3">LAST WEEK</div>
-                        <div class="col-3">WRK ON CHART</div>
-                    </div>
-                </div>
-                @if(isset($data['chart']['is_live']))
-                <div class="col-2">
-                    <input type="hidden" name="title" value="{{ $data['chart']['chart_name'] }}">
-                    <input type="hidden" name="chart_date" value="{{ $data['chart']['chart_date'] }}">
-                    <input type="hidden" name="chart" value="{{ json_encode($data['chart']['chart']) }}">
-                    <input type="hidden" name="video" value="{{ json_encode($data['chart']['chart_videos']) }}">
-                    <input type="submit" value="STORE CHART" class="btn btn-primary">
-                </div>
-                @endif
+<x-app-layout>
+<x-slot name="header">hello</x-slot>
+<div class="container mx-auto py-3">
+    <div class="">
+        <form action="{{ route('chart.store') }}" class="grid grid-cols-8" method="POST">
+            @csrf
+            @method("POST")
+            <div class="col-span-1">
+                <select name="chart_category_key" id="billboard-category" class="form-control" onchange="getChart(event)">
+                    @foreach($data['category'] as $item)
+                        <option value="{{$item->key}}" data-id="{{ $item->id }}" @if($item->key == app('request')->cate) selected @endif>{{ $item->key }}</option>
+                    @endforeach
+                </select>
+                <script>
+                    function getChart(e){
+                        window.location = "?cate="+e.target.value;
+                    }
+                </script>
             </div>
+            @if ($errors->any())
+                <div class="alert alert-danger">
+                    <ul>
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
+            <div class="item-status col-start-4 col-span-4">
+                <div class="row text-center small grid grid-cols-4">
+                    <div class="">RE ENTRY</div>
+                    <div class="">PEAK</div>
+                    <div class="">LAST WEEK</div>
+                    <div class="">WRK ON CHART</div>
+                </div>
+            </div>
+            @if(isset($data['chart']['is_live']))
+            <div class="col-span-1 text-center">
+                <input type="hidden" name="title" value="{{ $data['chart']['chart_name'] }}">
+                <input type="hidden" name="chart_date" value="{{ $data['chart']['chart_date'] }}">
+                <input type="hidden" name="chart" value="{{ json_encode($data['chart']['chart']) }}">
+                <input type="hidden" name="video" value="{{ json_encode($data['chart']['chart_videos']) }}">
+                <input type="submit" value="STORE CHART" class="bg-blue-600 rounded p-3 text-white font-bold">
+            </div>
+            @endif
         </form>
-        <div class="chart">
-            @foreach($data['chart']['chart'] as $item)
-            <div class="row chart-item bg-white px-3 py-5 my-3">
+    </div>
+    <div class="chart">
+        @foreach($data['chart']['chart'] as $item)
+            <div class="grid grid-cols-8 chart-item bg-white px-3 py-5 my-3">
                 <input type="hidden" name="artist_id" value="{{ $item->artist_id }}">
-                <div class="rankbox div-table-td col-1 text-center">
+                <div class="rankbox col-span-1 div-table-td text-center">
                     <div class="rank h3">{{ $item->rank }}</div>
                     <div class="updown text-muted">
                         @if($item->bullets->bullet_desc == true)
-                        <span class="text-success">UP</span>
+                            <span class="text-green-500">UP</span>
                         @else
-                        <span class="text-danger">DOWN</span>
+                            <span class="text-red-500">DOWN</span>
                         @endif
                     </div>
                 </div>
-                <div class="item-content col-4">
-                    <div class="title h1"><b>{{ $item->title }}</b></div>
-                    <div class="artist h5">{{ $item->artist_name }}</div>
+                <div class="item-content col-span-2">
+                    <div class="title text-xl"><b>{{ $item->title }}</b></div>
+                    <div class="artist text-l">{{ $item->artist_name }}</div>
                 </div>
-                <div class="item-status col-5">
-                    <div class="row text-center">
-                        <div class="col-3">{{ $item->history->re_entry }}</div>
-                        <div class="col-3">{{ $item->history->peak_rank }}</div>
-                        <div class="col-3">{{ $item->history->last_week }}</div>
-                        <div class="col-3">{{ $item->history->weeks_on_chart }}</div>
+                <div class="item-status col-span-4">
+                    <div class="row text-center grid grid-cols-4">
+                        <div class="">{{ $item->history->re_entry }}</div>
+                        <div class="">{{ $item->history->peak_rank }}</div>
+                        <div class="">{{ $item->history->last_week }}</div>
+                        <div class="">{{ $item->history->weeks_on_chart }}</div>
                     </div>
                 </div>
-                <div class="item-image col-2 text-center">
+                <div class="item-image col-span-1 text-center">
                     @if(isset($item->title_images->sizes->{"ye-landing-lg"}->Name))
-                    <img src="https://charts-static.billboard.com{{ $item->title_images->sizes->{"medium"}->Name }}" alt="" class="mw-100 m-auto">
+                        <img src="https://charts-static.billboard.com{{ $item->title_images->sizes->{"medium"}->Name }}" alt="" class="mw-100 m-auto">
                     @endif
                 </div>
             </div>
-            @endforeach
-        </div>
+        @endforeach
     </div>
-@endsection
+</div>
+</x-app-layout>
