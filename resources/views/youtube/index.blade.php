@@ -1,8 +1,6 @@
 <x-app-layout>
-    <x-slot name="header">
-        header
-    </x-slot>
-    <div class="container mx-auto py-3">
+    @include('layouts.slot_header')
+    <div class="container max-w-7xl mx-auto p-4 sm:px-6 lg:px-8">
         <form action="{{ route('youtube.search') }}" method="GET" class="grid-cols-1">
             @csrf
             <h1 class="text-center text-2xl">유투브 검색</h1>
@@ -15,26 +13,7 @@
             </div>
         </form>
         @if($searchResponse)
-            <ul class="my-3">
-                @foreach($searchResponse as $item)
-                    <li class="list-none grid grid-cols-6 p-3 gap-3 bg-white mb-3 rounded border-gray-500 shadow">
-                        <div class="col-span-1">
-                            <img src="{{ $item->snippet->thumbnails->high->url }}" alt="" class="w-100">
-                        </div>
-                        <div class="col-span-5">
-                            <a href="https://youtube.com/watch?v={{ $item->id->videoId }}">{{ $item->snippet->title }}</a>
-                            <hr class="my-2">
-                            <p>
-                                {{$item->snippet->description}}
-                            </p>
-                            <p class="text-sm text-gray-500">
-                                {{$item->snippet->publishedAt}}
-                            </p>
-
-                        </div>
-                    </li>
-                @endforeach
-            </ul>
+            <x-youtube-item-list :searchResponse="$searchResponse"/>
         @endif
     </div>
 </x-app-layout>
