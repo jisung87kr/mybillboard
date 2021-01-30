@@ -34,7 +34,7 @@ class YoutubeDataApiController extends Controller
         }
 
         return view('youtube.index', compact('searchResponse'));
-
+// 실제 서비스 할때 이 코드 사용
 //        $searchResponse = null;
 //        $this->searchInit();
 //
