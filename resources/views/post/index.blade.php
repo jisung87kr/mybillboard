@@ -46,7 +46,7 @@
         </form>
     </div>
     <div class="chart">
-        @foreach($data['chart']['chart'] as $item)
+        @foreach($data['chart']['chart'] as $key => $item)
             <div x-data="{ open: false }" class="chart-item bg-white px-3 py-5 my-3">
                 <div class="grid grid-cols-8">
                     <input type="hidden" name="artist_id" value="{{ $item->artist_id }}">
@@ -72,18 +72,14 @@
                             <div class="">{{ $item->history->weeks_on_chart }}</div>
                         </div>
                     </div>
+
                     <div class="item-image col-span-1 text-center">
                         @if(isset($item->title_images->sizes->{"ye-landing-lg"}->Name))
                             <img src="https://charts-static.billboard.com{{ $item->title_images->sizes->{"medium"}->Name }}" alt="" class="mw-100 m-auto">
                         @endif
                     </div>
                 </div>
-                <div class="text-center">
-                    <a @click="open = true" class="text-center inline-block">links</a>
-                    <div x-show="open" @click.away="open = false" class="youtubelist">
-                        list
-                    </div>
-                </div>
+                <livewire:youtube-search :item="$item" key="$key"/>
             </div>
         @endforeach
     </div>

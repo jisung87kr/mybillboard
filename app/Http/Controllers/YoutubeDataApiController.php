@@ -4,14 +4,20 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+//use Illuminate\Support\Facades\View;
+use Illuminate\Support\Facades\Blade;
 
 class YoutubeDataApiController extends Controller
 {
     public $clientSecret;
+    public $order;
+    public $maxResults;
     public function __construct()
     {
         $searchResponse = null;
         $this->clientSecret = config('services.youtubeData.web', compact('searchResponse'));
+        $this->order = 'viewCount';
+        $this->maxResults = '5';
     }
 
     public function index()
@@ -23,19 +29,20 @@ class YoutubeDataApiController extends Controller
     public function search(Request $request)
     {
         $searchResponse = null;
-        if(!isset($request->q)){
-            return redirect()->route('youtube.index', compact('searchResponse'));
-        }
         $this->searchInit();
+
         $searchResponse = $this->youtube->search->listSearch('id,snippet', array(
             'q' => $request->q,
-            'order' => $request->order,
-            'maxResults' => $request->maxResults,
+            'order' => $this->order,
+            'maxResults' => $this->maxResults,
         ));
 
         $searchResponse = $searchResponse->items;
+        if($request->ajax()){
+            $component = view('components.youtube-item-list')->with(compact('searchResponse'))->render();
+            return response()->json($component);
+        }
         return view('youtube.index', compact('searchResponse'));
-//        return redirect()->route('youtube.index', compact('searchResponse'));
     }
 
     public function searchInit()

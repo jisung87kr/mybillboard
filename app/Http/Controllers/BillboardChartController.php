@@ -58,7 +58,7 @@ class BillboardChartController extends Controller
         $validated['billboard_chart_category_id'] = $chartCategory['id'];
         unset($validated['chart_category_key']);
         $chartCategory->charts()->create($validated);
-        return redirect()->route('index');
+        return redirect()->route('post.index');
     }
 
     /**
