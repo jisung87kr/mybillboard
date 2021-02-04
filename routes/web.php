@@ -27,8 +27,13 @@ Route::resource('/post', PostController::class);
 Route::post('/chart', [BillboardChartController::class, 'store'])->name('chart.store');
 //Auth::routes();
 
+Route::get('/test', function(){
+    return view('test');
+})->name('test');
+
 Route::get('/youtube', [youtubeDataApiController::class, 'index'])->name('youtube.index');
-Route::get('/youtube/search/{returnType?}', [youtubeDataApiController::class, 'search'])->name('youtube.search');
+Route::get('/youtube/search', [youtubeDataApiController::class, 'search'])->name('youtube.search');
+Route::any('/youtube/playlist', [youtubeDataApiController::class, 'storePlaylist'])->name('youtube.storePlaylist');
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 

@@ -46,42 +46,48 @@
         </form>
     </div>
     <div class="chart">
-        @foreach($data['chart']['chart'] as $key => $item)
-            <div x-data="{ open: false }" class="chart-item bg-white px-3 py-5 my-3">
-                <div class="grid grid-cols-8">
-                    <input type="hidden" name="artist_id" value="{{ $item->artist_id }}">
-                    <div class="rankbox col-span-1 div-table-td text-center">
-                        <div class="rank h3">{{ $item->rank }}</div>
-                        <div class="updown text-muted">
-                            @if($item->bullets->bullet_desc == true)
-                                <span class="text-green-500">UP</span>
-                            @else
-                                <span class="text-red-500">DOWN</span>
+        <form action="{{ route('youtube.storePlaylist') }}" method="POST">
+            <input type="submit" value="export playlist">
+            @csrf
+            <input type="hidden" name="title" value="{{ $data['chart']['chart_name'] }}">
+            <input type="hidden" name="chart_date" value="{{ $data['chart']['chart_date'] }}">
+            @foreach($data['chart']['chart'] as $key => $item)
+                <div class="chart-item bg-white px-3 py-5 my-3">
+                    <div class="grid grid-cols-8">
+                        <input type="hidden" name="artist_id" value="{{ $item->artist_id }}">
+                        <div class="rankbox col-span-1 div-table-td text-center">
+                            <div class="rank h3">{{ $item->rank }}</div>
+                            <div class="updown text-muted">
+                                @if($item->bullets->bullet_desc == true)
+                                    <span class="text-green-500">UP</span>
+                                @else
+                                    <span class="text-red-500">DOWN</span>
+                                @endif
+                            </div>
+                        </div>
+                        <div class="item-content col-span-2">
+                            <div class="title text-xl"><b>{{ $item->title }}</b></div>
+                            <div class="artist text-l">{{ $item->artist_name }}</div>
+                        </div>
+                        <div class="item-status col-span-4">
+                            <div class="row text-center grid grid-cols-4">
+                                <div class="">{{ $item->history->re_entry }}</div>
+                                <div class="">{{ $item->history->peak_rank }}</div>
+                                <div class="">{{ $item->history->last_week }}</div>
+                                <div class="">{{ $item->history->weeks_on_chart }}</div>
+                            </div>
+                        </div>
+
+                        <div class="item-image col-span-1 text-center">
+                            @if(isset($item->title_images->sizes->{"ye-landing-lg"}->Name))
+                                <img src="https://charts-static.billboard.com{{ $item->title_images->sizes->{"medium"}->Name }}" alt="" class="mw-100 m-auto">
                             @endif
                         </div>
                     </div>
-                    <div class="item-content col-span-2">
-                        <div class="title text-xl"><b>{{ $item->title }}</b></div>
-                        <div class="artist text-l">{{ $item->artist_name }}</div>
-                    </div>
-                    <div class="item-status col-span-4">
-                        <div class="row text-center grid grid-cols-4">
-                            <div class="">{{ $item->history->re_entry }}</div>
-                            <div class="">{{ $item->history->peak_rank }}</div>
-                            <div class="">{{ $item->history->last_week }}</div>
-                            <div class="">{{ $item->history->weeks_on_chart }}</div>
-                        </div>
-                    </div>
-
-                    <div class="item-image col-span-1 text-center">
-                        @if(isset($item->title_images->sizes->{"ye-landing-lg"}->Name))
-                            <img src="https://charts-static.billboard.com{{ $item->title_images->sizes->{"medium"}->Name }}" alt="" class="mw-100 m-auto">
-                        @endif
-                    </div>
+                    <livewire:youtube-search :item="$item" key="$key"/>
                 </div>
-                <livewire:youtube-search :item="$item" key="$key"/>
-            </div>
-        @endforeach
+            @endforeach
+        </form>
     </div>
 </div>
 </x-app-layout>
