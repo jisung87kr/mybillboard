@@ -47,7 +47,10 @@
     </div>
     <div class="chart">
         <form action="{{ route('youtube.storePlaylist') }}" method="POST">
-            <input type="submit" value="export playlist">
+            <div class="grid grid-cols-12 gap-2 mt-3">
+                <input type="submit" value="export playlist" class="bg-blue-500 text-white p-3 rounded col-span-2">
+                <input type="button" value="expand" class="bg-blue-500 text-white p-3 rounded col-span-1" id="expand">
+            </div>
             @csrf
             <input type="hidden" name="title" value="{{ $data['chart']['chart_name'] }}">
             <input type="hidden" name="chart_date" value="{{ $data['chart']['chart_date'] }}">
@@ -90,4 +93,38 @@
         </form>
     </div>
 </div>
+<script>
+    window.onload = function () {
+        $(".btn-search").click(function (e) {
+            e.preventDefault();
+            var form = $(this).parents(".resultbox").find(".form-youtube-search");
+            var result = $(this).parents(".resultbox").find(".result");
+            var url = form.attr('data-action');
+            var data = {
+                q : form.find('input[name=q]').val(),
+            };
+            console.log(data, url);
+
+            $.ajax({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                dataType: 'json',
+                type: 'GET',
+                url: url,
+                data: data,
+                success: function(data){
+                    result.append(data);
+                },
+                error : function(data){
+                    console.log(data);
+                }
+            });
+        });
+
+        $("#expand").click(function(){
+           $(".btn-search").trigger('click');
+        });
+    }
+</script>
 </x-app-layout>
