@@ -47,12 +47,16 @@ class BillboardChartController extends Controller
      */
     public function store(Request $request)
     {
+        if(BillboardChart::where('chart_date', '2021-02-13')->get()){
+            return redirect()->route('post.index')->with('hasChart', '중복된 차트입니다.');
+        };
+
         $validated     = $request->validate([
             'chart_category_key' => 'required',
-            'chart_date'        => 'required',
-            'title'             => 'required',
-            'chart'             => 'required',
-            'video'             => 'required',
+            'chart_date'         => 'required',
+            'title'              => 'required',
+            'chart'              => 'required',
+            'video'              => 'required',
         ]);
         $chartCategory = BillboardChartCategory::where('key', $request->input('chart_category_key'))->first();
         $validated['billboard_chart_category_id'] = $chartCategory['id'];
