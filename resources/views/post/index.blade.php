@@ -27,7 +27,7 @@
                 </div>
             @endif
             <div class="item-status col-start-4 col-span-4">
-                <div class="row text-center small grid grid-cols-4">
+                <div class="row text-center small grid grid-cols-4 mt-3 text-sm">
                     <div class="">RE ENTRY</div>
                     <div class="">PEAK</div>
                     <div class="">LAST WEEK</div>
@@ -40,7 +40,12 @@
                 <input type="hidden" name="chart_date" value="{{ $data['chart']['chart_date'] }}">
                 <input type="hidden" name="chart" value="{{ json_encode($data['chart']['chart']) }}">
                 <input type="hidden" name="video" value="{{ json_encode($data['chart']['chart_videos']) }}">
-                <input type="submit" value="STORE CHART" class="bg-blue-600 rounded p-3 text-white font-bold">
+                <input type="submit" value="STORE CHART" class="bg-blue-600 rounded p-3 text-white font-bold text-sm">
+                @if (session('hasChart'))
+                    <div class="text-red-500">
+                        {{ session('hasChart') }}
+                    </div>
+                @endif
             </div>
             @endif
         </form>

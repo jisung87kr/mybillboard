@@ -16,7 +16,7 @@ class YoutubeDataApiController extends Controller
         $searchResponse = null;
         $this->clientSecret = config('services.youtubeData.web', compact('searchResponse'));
         $this->order = 'viewCount';
-        $this->maxResults = '5';
+        $this->maxResults = '10';
     }
 
     public function index()
@@ -66,6 +66,9 @@ class YoutubeDataApiController extends Controller
         if(!$request->videoId){
 //            return redirect()->back()->with('massage', '비디오값이 비었습니다.');
         }
+
+        Storage::disk('public')->put('videoId_'.date("ymd").'.json', json_encode($request->videoId));
+
         $client = new \Google_Client();
         $client->setClientId($this->clientSecret['client_id']);
         $client->setClientSecret($this->clientSecret['client_secret']);
